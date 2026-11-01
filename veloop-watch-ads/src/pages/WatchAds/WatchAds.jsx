@@ -1,0 +1,310 @@
+import { useState, useEffect } from "react";
+import { Check, X } from "lucide-react";
+import { Sidebar } from "../../components/Sidebar/Sidebar";
+import { Topbar } from "../../components/Topbar/Topbar";
+import { HeroSection } from "../../components/HeroSection/HeroSection";
+import { StatsOverview } from "../../components/StatsOverview/StatsOverview";
+import { TrustBanner } from "../../components/TrustBanner/TrustBanner";
+import { BonusBanner } from "../../components/BonusBanner/BonusBanner";
+import { AvailableAds } from "../../components/AvailableAds/AvailableAds";
+import { BottomWidgets } from "../../components/BottomWidgets/BottomWidgets";
+import { HowItWorks } from "../../components/HowItWorks/HowItWorks";
+import { WalletModal } from "../../components/WalletModal/WalletModal";
+import { LearnMoreModal } from "../../components/LearnMoreModal/LearnMoreModal";
+import { NotificationsModal } from "../../components/NotificationsModal/NotificationsModal";
+import { BonusModal } from "../../components/BonusBanner/BonusModal";
+import { ConfettiCelebration } from "../../components/Confetti/ConfettiCelebration";
+
+import {
+  INITIAL_USER_STATE,
+  INITIAL_ADS_DATA,
+  INITIAL_RECENT_EARNINGS,
+  NOTIFICATIONS_DATA,
+} from "../../utils/dummyData";
+
+import styles from "./WatchAds.module.css";
+
+const STORAGE_KEY = "veloop_rewards_dashboard_state";
+
+export function WatchAds() {
+  // 1. User metrics & balance state
+  const [userState, setUserState] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.userState) return parsed.userState;
+      }
+    } catch {
+      // fallback
+    }
+    return INITIAL_USER_STATE;
+  });
+
+  // 2. Advertisements list
+  const [ads, setAds] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.ads && parsed.ads.length > 0) return parsed.ads;
+      }
+    } catch {
+      // fallback
+    }
+    return INITIAL_ADS_DATA;
+  });
+
+  // 3. Recent Earnings timeline
+  const [recentEarnings, setRecentEarnings] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.recentEarnings && parsed.recentEarnings.length > 0) {
+          return parsed.recentEarnings;
+        }
+      }
+    } catch {
+      // fallback
+    }
+    return INITIAL_RECENT_EARNINGS;
+  });
+
+  // 4. Notifications
+  const [notifications, setNotifications] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.notifications) return parsed.notifications;
+      }
+    } catch {
+      // fallback
+    }
+    return NOTIFICATIONS_DATA;
+  });
+
+  // Modal visibility states
+  const [isWalletOpen, setIsWalletOpen] = useState(false);
+  const [isLearnMoreOpen, setIsLearnMoreOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isBonusOpen, setIsBonusOpen] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [activeNavTab, setActiveNavTab] = useState("watchAds");
+
+  // Celebration & Toast notification states
+  const [triggerConfetti, setTriggerConfetti] = useState(false);
+  const [successToast, setSuccessToast] = useState(null);
+
+  // Sync to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          userState,
+          ads,
+          recentEarnings,
+          notifications,
+        })
+      );
+    } catch {
+      // ignore storage quota issues
+    }
+  }, [userState, ads, recentEarnings, notifications]);
+
+  // Toast auto-dismiss
+  useEffect(() => {
+    if (!successToast) return;
+    const timer = setTimeout(() => {
+      setSuccessToast(null);
+    }, 4500);
+    return () => clearTimeout(timer);
+  }, [successToast]);
+
+  // Handler: Ad completed and reward claimed
+  const handleAdComplete = (completedAd) => {
+    const rewardAmount = Number(completedAd.reward);
+
+    // 1. Update user state
+    setUserState((prev) => ({
+      ...prev,
+      balance: prev.balance + rewardAmount,
+      lifetimeEarnings: prev.lifetimeEarnings + rewardAmount,
+      todayEarnings: prev.todayEarnings + rewardAmount,
+      adsWatchedToday: prev.adsWatchedToday + 1,
+      remainingAds: Math.max(prev.remainingAds - 1, 0),
+    }));
+
+    // 2. Mark this ad as watched
+    setAds((prevAds) =>
+      prevAds.map((a) =>
+        a.id === completedAd.id ? { ...a, status: "watched" } : a
+      )
+    );
+
+    // 3. Prepend to recent earnings timeline
+    const newRecord = {
+      id: `rec-${Date.now()}`,
+      adName: completedAd.title,
+      reward: rewardAmount,
+      timeAgo: "Just now",
+      date: new Date().toISOString(),
+      category: completedAd.category,
+    };
+    setRecentEarnings((prev) => [newRecord, ...prev]);
+
+    // 4. Trigger celebration
+    setTriggerConfetti(true);
+    setSuccessToast({
+      title: "Reward Successfully Earned!",
+      message: `+${rewardAmount} VEs credited for watching ${completedAd.title}`,
+    });
+  };
+
+  const scrollToAds = () => {
+    const target = document.getElementById("available-ads-section");
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleMarkAllNotificationsRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
+  };
+
+  const unreadCount = notifications.filter((n) => n.unread).length;
+
+  return (
+    <div className={styles.layoutWrapper}>
+      {/* Global Particle Confetti */}
+      <ConfettiCelebration
+        trigger={triggerConfetti}
+        onComplete={() => setTriggerConfetti(false)}
+      />
+
+      {/* Left Sidebar */}
+      <Sidebar
+        isOpen={isMobileSidebarOpen}
+        onClose={() => setIsMobileSidebarOpen(false)}
+        activeTab={activeNavTab}
+        onSelectTab={(tabId) => {
+          setActiveNavTab(tabId);
+          if (tabId === "wallet") setIsWalletOpen(true);
+          if (tabId === "rewards") setIsBonusOpen(true);
+        }}
+        onOpenWallet={() => setIsWalletOpen(true)}
+        onOpenPremium={() => setIsBonusOpen(true)}
+      />
+
+      {/* Main Content Column */}
+      <div className={styles.mainColumn}>
+        {/* Top Header Bar */}
+        <Topbar
+          balance={userState.balance}
+          unreadNotifications={unreadCount}
+          onOpenNotifications={() => setIsNotificationsOpen(true)}
+          onOpenWallet={() => setIsWalletOpen(true)}
+          onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+          userInitials={userState.userInitials}
+          onOpenProfile={() => setIsWalletOpen(true)}
+        />
+
+        {/* Page Inner Container */}
+        <main className={styles.contentContainer}>
+          {/* 1. Hero Section */}
+          <HeroSection
+            todayEarnings={userState.todayEarnings}
+            dailyGoal={userState.dailyGoal}
+          />
+
+          {/* 2. Statistics KPI Overview Cards */}
+          <StatsOverview
+            todayEarnings={userState.todayEarnings}
+            lifetimeEarnings={userState.lifetimeEarnings}
+            adsWatchedToday={userState.adsWatchedToday}
+            remainingAds={userState.remainingAds}
+            onScrollToAds={scrollToAds}
+          />
+
+          {/* 3. Trust & Withdrawal Information Banner */}
+          <TrustBanner onLearnMore={() => setIsLearnMoreOpen(true)} />
+
+          {/* 4. Weekend Bonus Rush Banner */}
+          <BonusBanner onOpenBonus={() => setIsBonusOpen(true)} />
+
+          {/* 5. Available Ads Section with Cards & Player Modal */}
+          <AvailableAds
+            ads={ads}
+            onAdComplete={handleAdComplete}
+          />
+
+          {/* 6. Bottom Widgets: Daily Streak, Recent Earnings, Weekly Earnings */}
+          <BottomWidgets
+            streakDays={userState.dailyStreak}
+            recentEarnings={recentEarnings}
+            weeklyEarnings={userState.weeklyEarningsTotal}
+            growthPercentage={userState.weeklyGrowthPercentage}
+            onViewAllEarnings={() => setIsWalletOpen(true)}
+          />
+
+          {/* 7. How It Works Section */}
+          <HowItWorks onOpenWallet={() => setIsWalletOpen(true)} />
+        </main>
+      </div>
+
+      {/* Interactive Modals */}
+      {isWalletOpen && (
+        <WalletModal
+          balance={userState.balance}
+          onClose={() => setIsWalletOpen(false)}
+        />
+      )}
+
+      {isLearnMoreOpen && (
+        <LearnMoreModal onClose={() => setIsLearnMoreOpen(false)} />
+      )}
+
+      {isNotificationsOpen && (
+        <NotificationsModal
+          notifications={notifications}
+          onClose={() => setIsNotificationsOpen(false)}
+          onMarkAllRead={handleMarkAllNotificationsRead}
+        />
+      )}
+
+      {isBonusOpen && (
+        <BonusModal
+          onClose={() => setIsBonusOpen(false)}
+          onGoToBonusAd={() => {
+            scrollToAds();
+          }}
+        />
+      )}
+
+      {/* Floating Success Toast Notification */}
+      {successToast && (
+        <div className={styles.successToast} role="alert">
+          <div className={styles.toastCheckIcon}>
+            <Check size={20} strokeWidth={3} />
+          </div>
+          <div>
+            <h5 className={styles.toastTitle}>{successToast.title}</h5>
+            <p className={styles.toastSubtitle}>{successToast.message}</p>
+          </div>
+          <button
+            type="button"
+            className={styles.toastCloseBtn}
+            onClick={() => setSuccessToast(null)}
+            aria-label="Close notification"
+          >
+            <X size={16} />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default WatchAds;

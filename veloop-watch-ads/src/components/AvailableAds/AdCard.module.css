@@ -1,0 +1,209 @@
+.card {
+  background: #12101e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(139, 92, 246, 0.45);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45), 0 0 20px rgba(139, 92, 246, 0.15);
+}
+
+.completedCard {
+  opacity: 0.72;
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.completedCard:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.illustrationArea {
+  height: 140px;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03) 0%, rgba(0, 0, 0, 0.2) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.badgeBar {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 5;
+}
+
+.sponsoredBadge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.bonusBadge {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #f59e0b, #ef4444);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cardBody {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.titleArea {
+  margin-bottom: 14px;
+}
+
+.brandName {
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.categoryTag {
+  font-size: 11px;
+  font-weight: 500;
+  color: #a78bfa;
+}
+
+.tagline {
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 16px;
+  font-size: 12.5px;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+.rewardAmount {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #fbbf24;
+  font-weight: 700;
+  font-size: 13.5px;
+}
+
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #34d399;
+}
+
+.statusIndicatorCompleted {
+  color: #94a3b8;
+}
+
+.statusDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}
+
+.statusDotCompleted {
+  background-color: #64748b;
+  box-shadow: none;
+}
+
+.watchBtn {
+  width: 100%;
+  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 11px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.watchBtn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.5);
+}
+
+.watchBtn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.watchBtnCompleted {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #64748b;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.watchBtnCompleted:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: none;
+  box-shadow: none;
+}

@@ -1,0 +1,113 @@
+.layoutWrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: #0b0a12;
+  color: #f1f5f9;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  overflow-x: hidden;
+}
+
+.mainColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  position: relative;
+}
+
+.contentContainer {
+  padding: 28px 36px 60px;
+  max-width: 1320px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Floating Success Toast */
+.successToast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9999;
+  background: #111827;
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(16, 185, 129, 0.3);
+  padding: 14px 20px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  animation: slideToast 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  color: #ffffff;
+  max-width: 420px;
+}
+
+@keyframes slideToast {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.toastCheckIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  color: #10b981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.toastTitle {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #34d399;
+  margin: 0 0 2px 0;
+}
+
+.toastSubtitle {
+  font-size: 12px;
+  color: #cbd5e1;
+  margin: 0;
+}
+
+.toastCloseBtn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.toastCloseBtn:hover {
+  color: #ffffff;
+}
+
+@media (max-width: 1024px) {
+  .contentContainer {
+    padding: 20px 24px 50px;
+  }
+}
+
+@media (max-width: 640px) {
+  .contentContainer {
+    padding: 14px 14px 40px;
+  }
+
+  .successToast {
+    left: 14px;
+    right: 14px;
+    bottom: 16px;
+    max-width: none;
+  }
+}
