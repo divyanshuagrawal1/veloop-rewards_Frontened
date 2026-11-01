@@ -138,12 +138,6 @@ export function Sidebar({
               <ArrowRight size={13} />
             </button>
           </div>
-
-          <p className={styles.copyright}>
-            &copy; 2025 VELOOP Rewards.
-            <br />
-            All rights reserved.
-          </p>
         </div>
       </aside>
     </>
