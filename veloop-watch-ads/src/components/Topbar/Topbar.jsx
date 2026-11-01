@@ -1,15 +1,16 @@
-import { Bell, ChevronDown, Menu } from "lucide-react";
+import { Bell, ChevronDown, Menu, RotateCcw } from "lucide-react";
 import { VECoinIcon } from "../../assets/VECoinIcon";
 import { formatNumber } from "../../utils/formatters";
 import { useAnimatedCounter } from "../../hooks/useAnimatedCounter";
 import styles from "./Topbar.module.css";
 
 export function Topbar({
-  balance = 2450,
-  unreadNotifications = 2,
+  balance = 0,
+  unreadNotifications = 1,
   onOpenNotifications,
   onOpenWallet,
   onToggleMobileSidebar,
+  onResetProgress,
   userInitials = "SM",
   onOpenProfile,
 }) {
@@ -34,6 +35,17 @@ export function Topbar({
       </div>
 
       <div className={styles.rightSection}>
+        {/* Reset Progress to 0 Button for Testing */}
+        <button
+          type="button"
+          className={styles.iconBtn}
+          onClick={onResetProgress}
+          title="Reset progress to 0 (Fresh Start)"
+          aria-label="Reset progress to 0"
+        >
+          <RotateCcw size={16} />
+        </button>
+
         {/* Notification Bell */}
         <button
           type="button"

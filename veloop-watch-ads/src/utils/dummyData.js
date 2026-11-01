@@ -1,24 +1,25 @@
+// Initial clean baseline user state starting from 0
 export const INITIAL_USER_STATE = {
   userName: "Sanket M.",
   userInitials: "SM",
-  balance: 2450,
-  lifetimeEarnings: 12450,
-  todayEarnings: 96,
+  balance: 0,
+  lifetimeEarnings: 0,
+  todayEarnings: 0,
   dailyGoal: 150,
-  adsWatchedToday: 5,
-  remainingAds: 7,
-  weeklyEarningsTotal: 1260,
-  weeklyGrowthPercentage: 18,
-  dailyStreak: 7,
+  adsWatchedToday: 0,
+  remainingAds: 6,
+  weeklyEarningsTotal: 0,
+  dailyStreak: 0,
 };
 
+// 6 diverse sponsor advertisements matching Page 4 & 10 of Veloop Rewards specification
 export const INITIAL_ADS_DATA = [
   {
     id: "ad-1",
     title: "FinVerse Pro",
     category: "Finance",
     tagline: "The future of smart finance management.",
-    description: "Experience AI-driven wealth insights, zero-commission portfolio tracking, and military-grade encryption with FinVerse Pro.",
+    description: "Experience AI-driven wealth insights, zero-commission portfolio tracking, and bank-grade encryption with FinVerse Pro.",
     duration: 45,
     reward: 38,
     badge: "Sponsored",
@@ -136,96 +137,79 @@ export const INITIAL_ADS_DATA = [
   },
 ];
 
-export const INITIAL_RECENT_EARNINGS = [
-  {
-    id: "rec-1",
-    adName: "FinVerse Pro",
-    reward: 38,
-    timeAgo: "20m ago",
-    date: new Date(Date.now() - 20 * 60 * 1000).toISOString(),
-    category: "Finance",
-  },
-  {
-    id: "rec-2",
-    adName: "StrideX",
-    reward: 25,
-    timeAgo: "1h ago",
-    date: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
-    category: "Lifestyle",
-  },
-  {
-    id: "rec-3",
-    adName: "DriveEZ",
-    reward: 20,
-    timeAgo: "2h ago",
-    date: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    category: "Travel",
-  },
-  {
-    id: "rec-4",
-    adName: "Melody Beats",
-    reward: 50,
-    timeAgo: "Yesterday",
-    date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-    category: "Entertainment",
-  },
-  {
-    id: "rec-5",
-    adName: "SafeNet VPN",
-    reward: 18,
-    timeAgo: "1 day ago",
-    date: new Date(Date.now() - 28 * 60 * 60 * 1000).toISOString(),
-    category: "Technology",
-  },
-];
+// Starts empty for a new user
+export const INITIAL_RECENT_EARNINGS = [];
 
-export const WEEKLY_EARNINGS_CHART_DATA = [
-  { day: "Mon", fullDay: "Monday", earnings: 140, isBest: false },
-  { day: "Tue", fullDay: "Tuesday", earnings: 190, isBest: false },
-  { day: "Wed", fullDay: "Wednesday", earnings: 160, isBest: false },
-  { day: "Thu", fullDay: "Thursday", earnings: 210, isBest: false },
-  { day: "Fri", fullDay: "Friday", earnings: 170, isBest: false },
-  { day: "Sat", fullDay: "Saturday", earnings: 150, isBest: false },
-  { day: "Sun", fullDay: "Sunday", earnings: 240, isBest: true },
-];
+// Helper to generate weekly chart data dynamically based on today's earnings
+export const generateWeeklyData = (todayEarnings = 0) => {
+  const days = [
+    { day: "Mon", fullDay: "Monday", earnings: 0 },
+    { day: "Tue", fullDay: "Tuesday", earnings: 0 },
+    { day: "Wed", fullDay: "Wednesday", earnings: 0 },
+    { day: "Thu", fullDay: "Thursday", earnings: 0 },
+    { day: "Fri", fullDay: "Friday", earnings: 0 },
+    { day: "Sat", fullDay: "Saturday", earnings: 0 },
+    { day: "Sun", fullDay: "Sunday", earnings: 0 },
+  ];
 
-export const DAILY_STREAK_DAYS = [
-  { label: "M", full: "Monday", active: true, isToday: false },
-  { label: "T", full: "Tuesday", active: true, isToday: false },
-  { label: "W", full: "Wednesday", active: true, isToday: false },
-  { label: "T", full: "Thursday", active: true, isToday: false },
-  { label: "F", full: "Friday", active: true, isToday: false },
-  { label: "S", full: "Saturday", active: true, isToday: false },
-  { label: "S", full: "Sunday", active: true, isToday: true },
-];
+  // Map JS getDay() (0 = Sun, 1 = Mon ... 6 = Sat) to days array index (0 = Mon ... 6 = Sun)
+  const currentJsDay = new Date().getDay();
+  const currentDayIndex = currentJsDay === 0 ? 6 : currentJsDay - 1;
 
-export const NOTIFICATIONS_DATA = [
+  days[currentDayIndex].earnings = todayEarnings;
+  days[currentDayIndex].isToday = true;
+
+  const maxEarnings = Math.max(...days.map((d) => d.earnings));
+  return days.map((d) => ({
+    ...d,
+    isBest: d.earnings > 0 && d.earnings === maxEarnings,
+  }));
+};
+
+// Helper to generate day streak indicators based on current day and whether ads were completed
+export const generateStreakDays = (hasCompletedToday = false) => {
+  const currentJsDay = new Date().getDay();
+  const currentDayIndex = currentJsDay === 0 ? 6 : currentJsDay - 1;
+
+  const labels = ["M", "T", "W", "T", "F", "S", "S"];
+  const fullNames = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+
+  return labels.map((label, idx) => ({
+    label,
+    full: fullNames[idx],
+    isToday: idx === currentDayIndex,
+    active: idx === currentDayIndex ? hasCompletedToday : false,
+  }));
+};
+
+export const INITIAL_NOTIFICATIONS_DATA = [
   {
     id: "notif-1",
-    title: "Daily Goal Almost Reached!",
-    message: "You've earned 96 / 150 VEs today. Watch 2 more ads to complete your goal.",
-    time: "15m ago",
+    title: "Welcome to VELOOP Rewards! 🎉",
+    message: "Start watching sponsor ads today to collect your first VEs and earn real cash.",
+    time: "Just now",
     unread: true,
   },
   {
     id: "notif-2",
-    title: "Melody Beats Bonus Ad Live",
-    message: "Special limited-time 50 VE ad is currently available on your dashboard.",
-    time: "1h ago",
+    title: "Melody Beats Bonus Ad Available",
+    message: "Special limited-time 50 VE ad is live in your available ads queue.",
+    time: "Today",
     unread: true,
   },
   {
     id: "notif-3",
-    title: "Streak Maintained: 7 Days 🔥",
-    message: "Congratulations! You have completed a full 7-day consistency streak.",
-    time: "5h ago",
-    unread: false,
-  },
-  {
-    id: "notif-4",
-    title: "Withdrawal Ready",
-    message: "Your 2,450 VE balance exceeds the minimum withdrawal condition (1,000 VEs).",
-    time: "1 day ago",
+    title: "Daily Goal Set: 150 VEs",
+    message: "Complete sponsor ads today to reach your 150 VE milestone.",
+    time: "Today",
     unread: false,
   },
 ];

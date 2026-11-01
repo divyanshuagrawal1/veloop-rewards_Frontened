@@ -1,13 +1,14 @@
-import { TrendingUp, Coins, PlayCircle, Eye, ArrowUpRight } from "lucide-react";
+import { TrendingUp, Coins, PlayCircle, Eye, ArrowUpRight, CheckCircle2 } from "lucide-react";
 import { formatNumber } from "../../utils/formatters";
 import { useAnimatedCounter } from "../../hooks/useAnimatedCounter";
 import styles from "./StatsOverview.module.css";
 
 export function StatsOverview({
-  todayEarnings = 96,
-  lifetimeEarnings = 12450,
-  adsWatchedToday = 5,
-  remainingAds = 7,
+  todayEarnings = 0,
+  lifetimeEarnings = 0,
+  adsWatchedToday = 0,
+  remainingAds = 6,
+  totalAdsCount = 6,
   onScrollToAds,
 }) {
   const animatedToday = useAnimatedCounter(todayEarnings);
@@ -35,10 +36,16 @@ export function StatsOverview({
         </div>
 
         <div className={styles.footerRow}>
-          <span className={styles.trendBadge}>
-            <TrendingUp size={12} />
-            +12% vs yesterday
-          </span>
+          {todayEarnings > 0 ? (
+            <span className={styles.trendBadge}>
+              <TrendingUp size={12} />
+              +{todayEarnings} VEs earned today
+            </span>
+          ) : (
+            <span className={styles.mutedText}>
+              🎯 Daily goal: 150 VEs
+            </span>
+          )}
         </div>
       </article>
 
@@ -60,7 +67,7 @@ export function StatsOverview({
         </div>
 
         <div className={styles.footerRow}>
-          <span className={styles.mutedText}>All time</span>
+          <span className={styles.mutedText}>All-time accumulated</span>
         </div>
       </article>
 
@@ -81,9 +88,8 @@ export function StatsOverview({
         </div>
 
         <div className={styles.footerRow}>
-          <span className={styles.trendBadge}>
-            <TrendingUp size={12} />
-            +2 vs yesterday
+          <span className={styles.mutedText}>
+            {adsWatchedToday} of {totalAdsCount} ads watched
           </span>
         </div>
       </article>
@@ -105,15 +111,22 @@ export function StatsOverview({
         </div>
 
         <div className={styles.footerRow}>
-          <button
-            type="button"
-            className={styles.actionLinkText}
-            onClick={onScrollToAds}
-            style={{ background: "none", border: "none", padding: 0, display: "inline-flex", alignItems: "center", gap: "2px" }}
-          >
-            Start watching now!
-            <ArrowUpRight size={13} />
-          </button>
+          {remainingAds > 0 ? (
+            <button
+              type="button"
+              className={styles.actionLinkText}
+              onClick={onScrollToAds}
+              style={{ background: "none", border: "none", padding: 0, display: "inline-flex", alignItems: "center", gap: "2px" }}
+            >
+              Start watching now!
+              <ArrowUpRight size={13} />
+            </button>
+          ) : (
+            <span style={{ color: "#34d399", fontSize: "12px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+              <CheckCircle2 size={13} />
+              All ads completed!
+            </span>
+          )}
         </div>
       </article>
     </section>

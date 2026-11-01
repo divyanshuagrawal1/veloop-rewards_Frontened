@@ -4,22 +4,26 @@ import { WeeklyEarningsCard } from "./WeeklyEarningsCard";
 import styles from "./BottomWidgets.module.css";
 
 export function BottomWidgets({
-  streakDays = 7,
+  streakDays = 0,
+  hasCompletedToday = false,
   recentEarnings = [],
-  weeklyEarnings = 1260,
-  growthPercentage = 18,
+  todayEarnings = 0,
+  weeklyEarnings = 0,
   onViewAllEarnings,
 }) {
   return (
     <section className={styles.bottomWidgetsGrid} aria-label="Performance and Activity Metrics">
-      <DailyStreakCard streakDays={streakDays} />
+      <DailyStreakCard
+        streakDays={streakDays}
+        hasCompletedToday={hasCompletedToday}
+      />
       <RecentEarningsCard
         recentEarnings={recentEarnings}
         onViewAll={onViewAllEarnings}
       />
       <WeeklyEarningsCard
+        todayEarnings={todayEarnings}
         weeklyEarnings={weeklyEarnings}
-        growthPercentage={growthPercentage}
       />
     </section>
   );

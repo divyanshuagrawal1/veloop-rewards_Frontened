@@ -4,7 +4,7 @@ import { useAnimatedCounter } from "../../hooks/useAnimatedCounter";
 import styles from "./HeroSection.module.css";
 
 export function HeroSection({
-  todayEarnings = 96,
+  todayEarnings = 0,
   dailyGoal = 150,
 }) {
   const animatedEarnings = useAnimatedCounter(todayEarnings);
@@ -35,8 +35,10 @@ export function HeroSection({
 
           <p className={styles.progressCaption}>
             <Sparkles size={13} style={{ color: "#f59e0b" }} />
-            {percentage >= 100
-              ? "Goal reached! You're on fire today!"
+            {percentage === 0
+              ? "Start watching ads below to make progress toward your 150 VE daily goal."
+              : percentage >= 100
+              ? "🎉 Daily Goal Achieved! Outstanding work today!"
               : "Keep going! You're so close to your daily goal."}
           </p>
         </div>

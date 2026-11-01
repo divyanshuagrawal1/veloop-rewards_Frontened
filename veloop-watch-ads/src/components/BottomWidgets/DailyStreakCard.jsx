@@ -1,9 +1,11 @@
 import { Flame, Check } from "lucide-react";
 import { StreakGiftIllustration } from "../../assets/StreakGiftIllustration";
-import { DAILY_STREAK_DAYS } from "../../utils/dummyData";
+import { generateStreakDays } from "../../utils/dummyData";
 import styles from "./BottomWidgets.module.css";
 
-export function DailyStreakCard({ streakDays = 7 }) {
+export function DailyStreakCard({ streakDays = 0, hasCompletedToday = false }) {
+  const days = generateStreakDays(hasCompletedToday);
+
   return (
     <article className={styles.widgetCard} aria-label="Daily Streak Status">
       <div className={styles.cardHeader}>
@@ -15,8 +17,12 @@ export function DailyStreakCard({ streakDays = 7 }) {
 
       <div className={styles.streakMainRow}>
         <div>
-          <h3 className={styles.streakBigNum}>{streakDays} Days</h3>
-          <p className={styles.streakSubtitle}>Keep it up!</p>
+          <h3 className={styles.streakBigNum}>{streakDays} {streakDays === 1 ? "Day" : "Days"}</h3>
+          <p className={styles.streakSubtitle}>
+            {streakDays === 0
+              ? "Watch 1 ad to start streak!"
+              : "Keep it up!"}
+          </p>
         </div>
 
         <div className={styles.giftIllustrationWrapper}>
@@ -25,14 +31,14 @@ export function DailyStreakCard({ streakDays = 7 }) {
       </div>
 
       <div className={styles.daysRow}>
-        {DAILY_STREAK_DAYS.map((day, idx) => (
+        {days.map((day, idx) => (
           <div key={idx} className={styles.dayPill}>
             <span className={styles.dayLetter}>{day.label}</span>
             <div
               className={`${styles.dayIndicator} ${
                 day.active ? styles.dayActive : ""
               } ${day.isToday ? styles.dayToday : ""}`}
-              title={`${day.full} - Completed`}
+              title={`${day.full} ${day.active ? "- Completed" : "- Pending"}`}
             >
               {day.active ? <Check size={12} strokeWidth={3} /> : null}
             </div>
@@ -42,3 +48,5 @@ export function DailyStreakCard({ streakDays = 7 }) {
     </article>
   );
 }
+
+export default DailyStreakCard;

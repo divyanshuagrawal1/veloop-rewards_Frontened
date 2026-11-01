@@ -19,15 +19,16 @@ import {
   INITIAL_USER_STATE,
   INITIAL_ADS_DATA,
   INITIAL_RECENT_EARNINGS,
-  NOTIFICATIONS_DATA,
+  INITIAL_NOTIFICATIONS_DATA,
 } from "../../utils/dummyData";
 
 import styles from "./WatchAds.module.css";
 
-const STORAGE_KEY = "veloop_rewards_dashboard_state";
+// Storage key updated to ensure a clean start from 0 for all users
+const STORAGE_KEY = "veloop_rewards_v2_zero_start";
 
 export function WatchAds() {
-  // 1. User metrics & balance state
+  // 1. User metrics & balance state (starts at 0)
   const [userState, setUserState] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -41,7 +42,7 @@ export function WatchAds() {
     return INITIAL_USER_STATE;
   });
 
-  // 2. Advertisements list
+  // 2. Advertisements list (all 6 start as available)
   const [ads, setAds] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -55,15 +56,13 @@ export function WatchAds() {
     return INITIAL_ADS_DATA;
   });
 
-  // 3. Recent Earnings timeline
+  // 3. Recent Earnings timeline (starts empty at 0)
   const [recentEarnings, setRecentEarnings] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed.recentEarnings && parsed.recentEarnings.length > 0) {
-          return parsed.recentEarnings;
-        }
+        if (parsed.recentEarnings) return parsed.recentEarnings;
       }
     } catch {
       // fallback
@@ -82,7 +81,7 @@ export function WatchAds() {
     } catch {
       // fallback
     }
-    return NOTIFICATIONS_DATA;
+    return INITIAL_NOTIFICATIONS_DATA;
   });
 
   // Modal visibility states
@@ -96,6 +95,11 @@ export function WatchAds() {
   // Celebration & Toast notification states
   const [triggerConfetti, setTriggerConfetti] = useState(false);
   const [successToast, setSuccessToast] = useState(null);
+
+  // Dynamic calculations
+  const remainingAdsCount = ads.filter((a) => a.status === "available").length;
+  const adsWatchedCount = ads.filter((a) => a.status === "watched").length;
+  const hasCompletedAdToday = adsWatchedCount > 0;
 
   // Sync to localStorage
   useEffect(() => {
@@ -127,14 +131,16 @@ export function WatchAds() {
   const handleAdComplete = (completedAd) => {
     const rewardAmount = Number(completedAd.reward);
 
-    // 1. Update user state
+    // 1. Update user state (exact mathematical increment)
     setUserState((prev) => ({
       ...prev,
       balance: prev.balance + rewardAmount,
       lifetimeEarnings: prev.lifetimeEarnings + rewardAmount,
       todayEarnings: prev.todayEarnings + rewardAmount,
+      weeklyEarningsTotal: prev.weeklyEarningsTotal + rewardAmount,
       adsWatchedToday: prev.adsWatchedToday + 1,
       remainingAds: Math.max(prev.remainingAds - 1, 0),
+      dailyStreak: prev.dailyStreak === 0 ? 1 : prev.dailyStreak,
     }));
 
     // 2. Mark this ad as watched
@@ -160,6 +166,23 @@ export function WatchAds() {
     setSuccessToast({
       title: "Reward Successfully Earned!",
       message: `+${rewardAmount} VEs credited for watching ${completedAd.title}`,
+    });
+  };
+
+  // Reset progress back to 0 fresh start
+  const handleResetProgress = () => {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // ignore
+    }
+    setUserState(INITIAL_USER_STATE);
+    setAds(INITIAL_ADS_DATA);
+    setRecentEarnings(INITIAL_RECENT_EARNINGS);
+    setNotifications(INITIAL_NOTIFICATIONS_DATA);
+    setSuccessToast({
+      title: "Progress Reset to 0",
+      message: "All earnings, ad queues, and progress have been reset to zero.",
     });
   };
 
@@ -207,24 +230,26 @@ export function WatchAds() {
           onOpenNotifications={() => setIsNotificationsOpen(true)}
           onOpenWallet={() => setIsWalletOpen(true)}
           onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+          onResetProgress={handleResetProgress}
           userInitials={userState.userInitials}
           onOpenProfile={() => setIsWalletOpen(true)}
         />
 
         {/* Page Inner Container */}
         <main className={styles.contentContainer}>
-          {/* 1. Hero Section */}
+          {/* 1. Hero Section (Starts from 0 / 150 VEs) */}
           <HeroSection
             todayEarnings={userState.todayEarnings}
             dailyGoal={userState.dailyGoal}
           />
 
-          {/* 2. Statistics KPI Overview Cards */}
+          {/* 2. Statistics KPI Overview Cards (Dynamic 0 start) */}
           <StatsOverview
             todayEarnings={userState.todayEarnings}
             lifetimeEarnings={userState.lifetimeEarnings}
-            adsWatchedToday={userState.adsWatchedToday}
-            remainingAds={userState.remainingAds}
+            adsWatchedToday={adsWatchedCount}
+            remainingAds={remainingAdsCount}
+            totalAdsCount={ads.length}
             onScrollToAds={scrollToAds}
           />
 
@@ -243,9 +268,10 @@ export function WatchAds() {
           {/* 6. Bottom Widgets: Daily Streak, Recent Earnings, Weekly Earnings */}
           <BottomWidgets
             streakDays={userState.dailyStreak}
+            hasCompletedToday={hasCompletedAdToday}
             recentEarnings={recentEarnings}
+            todayEarnings={userState.todayEarnings}
             weeklyEarnings={userState.weeklyEarningsTotal}
-            growthPercentage={userState.weeklyGrowthPercentage}
             onViewAllEarnings={() => setIsWalletOpen(true)}
           />
 
