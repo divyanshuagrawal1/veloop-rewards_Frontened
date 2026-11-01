@@ -25,7 +25,7 @@ This repository delivers a **complete, ground-up UI/UX redesign and frontend red
 
 ### 2. 🚀 Premium Hero Section
 - High-impact headline: *"Earn VEs, Real Rewards"* with value proposition copy.
-- **Daily Earnings Progress**: Live tracker displaying `96 / 150 VEs` (64% progress) with dynamic motivational status messages.
+- **Daily Earnings Progress**: Live tracker displaying `96 / 166 VEs` (64% progress) with dynamic motivational status messages.
 - **High-Fidelity 3D Graphic**: Custom vector composition featuring a glossy perspective video player window, glowing 3D embossed golden `VE` token, and ambient sparkle stars.
 
 ### 3. 📊 KPI Statistics Grid (Animated Counters)
@@ -126,7 +126,7 @@ veloop-watch-ads/
 │   │   ├── useAnimatedCounter.js
 │   │   └── useAutoRefreshTimer.js
 │   ├── utils/
-│   │   ├── dummyData.js        # Realistic baseline data per PDF specifications
+│   │   ├── ta.js        # Realistic baseline data per PDF specifications
 │   │   └── formatters.js       # Number, currency (USD/INR) & duration formatters
 │   ├── styles/
 │   │   └── global.css          # Theme variables, typography & scrollbar rules

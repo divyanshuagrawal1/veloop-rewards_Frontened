@@ -237,7 +237,7 @@ export function WatchAds() {
 
         {/* Page Inner Container */}
         <main className={styles.contentContainer}>
-          {/* 1. Hero Section (Starts from 0 / 150 VEs) */}
+          {/* 1. Hero Section (Starts from 0 / 166 VEs) */}
           <HeroSection
             todayEarnings={userState.todayEarnings}
             dailyGoal={userState.dailyGoal}

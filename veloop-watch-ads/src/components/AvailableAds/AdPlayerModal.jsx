@@ -37,12 +37,7 @@ export function AdPlayerModal({ ad, onClose, onClaimReward }) {
     return () => clearInterval(timer);
   }, [isCompleted, secondsRemaining]);
 
-  const handleFastForwardDemo = () => {
-    setSecondsRemaining(0);
-    setIsCompleted(true);
-    setShowConfetti(true);
-  };
-
+  
   const handleClaim = () => {
     onClaimReward(ad);
     onClose();
@@ -214,17 +209,6 @@ export function AdPlayerModal({ ad, onClose, onClaimReward }) {
               to securely credit your VELOOP balance.
             </p>
 
-            {!isCompleted && (
-              <button
-                type="button"
-                className={styles.demoSkipBtn}
-                onClick={handleFastForwardDemo}
-                title="Fast-forward test timer for development/review"
-              >
-                <Zap size={13} style={{ display: "inline", marginRight: "4px" }} />
-                Instant Complete (Demo Test)
-              </button>
-            )}
           </div>
         </div>
       </div>

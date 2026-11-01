@@ -43,7 +43,7 @@ export function StatsOverview({
             </span>
           ) : (
             <span className={styles.mutedText}>
-              🎯 Daily goal: 150 VEs
+              🎯 Daily goal: 166 VEs
             </span>
           )}
         </div>
