@@ -1,209 +1,386 @@
+/* VELOOP - premium Watch Ads card styling
+   Keeps all existing CSS module class names and JSX functionality intact. */
+
 .card {
-  background: #12101e;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 18px;
-  overflow: hidden;
+  --card-accent: #9b7aff;
+  position: relative;
   display: flex;
   flex-direction: column;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(124, 58, 237, 0.11), transparent 58%),
+    linear-gradient(160deg, #171326 0%, #100e1b 58%, #100f1a 100%);
+  border: 1px solid rgba(167, 139, 250,  0.16);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.card::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.08), transparent 38%);
+  content: "";
+  pointer-events: none;
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(139, 92, 246, 0.45);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45), 0 0 20px rgba(139, 92, 246, 0.15);
+  transform: translateY(-5px);
+  border-color: rgba(167, 139, 250, 0.42);
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.34),
+    0 0 24px rgba(124, 58, 237, 0.12);
 }
 
 .completedCard {
-  opacity: 0.72;
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(148, 163, 184, 0.12);
 }
 
 .completedCard:hover {
   transform: none;
-  box-shadow: none;
+  border-color: rgba(148, 163, 184, 0.16);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
 .illustrationArea {
-  height: 140px;
-  width: 100%;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 158px;
+  min-height: 158px;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03) 0%, rgba(0, 0, 0, 0.2) 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background:
+    radial-gradient(ellipse at 50% 58%, rgba(255, 255, 255, 0.11), transparent 48%),
+    radial-gradient(ellipse at 50% 100%, rgba(124, 58, 237, 0.16), transparent 68%),
+    rgba(255, 255, 255, 0.018);
+}
+
+.illustrationArea::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 8, 18, 0.06), transparent 48%, rgba(10, 8, 18, 0.12));
+  content: "";
+  pointer-events: none;
 }
 
 .badgeBar {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  right: 12px;
+  z-index: 2;
+  top: 13px;
+  right: 14px;
+  left: 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  z-index: 5;
+  gap: 8px;
+}
+
+.sponsoredBadge,
+.bonusBadge {
+  display: inline-flex;
+  align-items: center;
+  max-width: 70%;
+  min-height: 24px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 750;
+  line-height: 1;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .sponsoredBadge {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 3px 8px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.12);
-  color: #e2e8f0;
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(248, 250, 252, 0.9);
+  background: rgba(15, 13, 27, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px);
 }
 
 .bonusBadge {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  padding: 3px 8px;
-  border-radius: 6px;
-  background: linear-gradient(90deg, #f59e0b, #ef4444);
-  color: #ffffff;
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  gap: 5px;
+  color: #fff8e7;
+  background: linear-gradient(100deg, #b7791f, #e65b36);
+  border: 1px solid rgba(255, 214, 130, 0.3);
+  box-shadow: 0 3px 12px rgba(224, 119, 36, 0.22);
 }
 
 .cardBody {
-  padding: 18px;
   display: flex;
-  flex-direction: column;
   flex: 1;
+  flex-direction: column;
   justify-content: space-between;
+  min-width: 0;
+  padding: 17px 17px 16px;
 }
 
 .titleArea {
-  margin-bottom: 14px;
+  min-width: 0;
+  margin-bottom: 15px;
 }
 
 .brandName {
-  font-size: 17px;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0 0 6px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  margin: 0 0 7px;
+  color: #fff;
+  font-size: clamp(15px, 1.2vw, 17px);
+  font-weight: 750;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+}
+
+.brandName > span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .categoryTag {
-  font-size: 11px;
-  font-weight: 500;
-  color: #a78bfa;
+  flex: 0 0 auto;
+  padding: 4px 8px;
+  color: #c4b5fd;
+  background: rgba(139, 92, 246, 0.11);
+  border: 1px solid rgba(167, 139, 250, 0.15);
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 650;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .tagline {
-  font-size: 13px;
-  color: #94a3b8;
+  display: -webkit-box;
+  overflow: hidden;
   margin: 0;
-  line-height: 1.45;
+  color: #a7a2b8;
+  font-size: 12px;
+  font-weight: 450;
+  line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .metaRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  margin-bottom: 16px;
-  font-size: 12.5px;
+  flex-wrap: wrap;
+  gap: 9px 12px;
+  min-width: 0;
+  margin: 0 0 15px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  font-size: 11px;
+}
+
+.metaItem,
+.rewardAmount,
+.statusIndicator {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  gap: 6px;
+  white-space: nowrap;
 }
 
 .metaItem {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #cbd5e1;
-  font-weight: 500;
+  color: #b8b5c7;
+  font-size: 11px;
+  font-weight: 550;
 }
 
 .rewardAmount {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #fbbf24;
-  font-weight: 700;
-  font-size: 13.5px;
+  color: #ffd66b;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .statusIndicator {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11.5px;
-  font-weight: 600;
-  color: #34d399;
+  color: #5ee3b0;
+  font-size: 10px;
+  font-weight: 700;
 }
 
 .statusIndicatorCompleted {
-  color: #94a3b8;
+  color: #9ca3af;
 }
 
 .statusDot {
   width: 7px;
   height: 7px;
+  flex: 0 0 7px;
   border-radius: 50%;
-  background-color: #10b981;
-  box-shadow: 0 0 6px #10b981;
+  background: #34d399;
+  box-shadow: 0 0 9px rgba(52, 211, 153, 0.65);
 }
 
 .statusDotCompleted {
-  background-color: #64748b;
+  background: #788397;
   box-shadow: none;
 }
 
 .watchBtn {
-  width: 100%;
-  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #ffffff;
-  font-size: 13.5px;
-  font-weight: 600;
-  padding: 11px 16px;
-  border-radius: 12px;
-  cursor: pointer;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
-  position: relative;
+  gap: 9px;
+  width: 100%;
+  min-height: 43px;
+  padding: 11px 15px;
   overflow: hidden;
+  color: #fff;
+  background: linear-gradient(105deg, #7138d5 0%, #7650e8 52%, #5e63db 100%);
+  border: 1px solid rgba(196, 181, 253, 0.34);
+  border-radius: 12px;
+  box-shadow: 0 5px 16px rgba(109, 65, 210, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.13);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+
+.watchBtn::before {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 20%, rgba(255, 255, 255, 0.13) 50%, transparent 80%);
+  transform: translateX(-120%);
+  transition: transform 500ms ease;
+  content: "";
+  pointer-events: none;
 }
 
 .watchBtn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.5);
+  filter: brightness(1.1);
+  box-shadow: 0 8px 20px rgba(109, 65, 210, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.watchBtn:hover:not(:disabled)::before {
+  transform: translateX(120%);
 }
 
 .watchBtn:active:not(:disabled) {
-  transform: scale(0.98);
+  transform: scale(0.985);
 }
 
-.watchBtnCompleted {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #64748b;
+.watchBtn:focus-visible {
+  outline: 2px solid #c4b5fd;
+  outline-offset: 3px;
+}
+
+.watchBtnCompleted,
+.watchBtnCompleted:hover {
+  color: #9ca3af;
+  background: rgba(148, 163, 184, 0.08);
+  border-color: rgba(148, 163, 184, 0.14);
   box-shadow: none;
   cursor: not-allowed;
+  filter: none;
+  transform: none;
 }
 
-.watchBtnCompleted:hover {
-  background: rgba(255, 255, 255, 0.05);
-  transform: none;
-  box-shadow: none;
+@media (max-width: 1100px) {
+  .cardBody {
+    padding: 15px;
+  }
+
+  .metaRow {
+    column-gap: 8px;
+  }
+}
+
+@media (max-width: 680px) {
+  .card {
+    border-radius: 18px;
+  }
+
+  .illustrationArea {
+    height: 150px;
+    min-height: 150px;
+  }
+
+  .cardBody {
+    padding: 15px;
+  }
+
+  .brandName {
+    font-size: 16px;
+  }
+
+  .metaRow {
+    gap: 9px 12px;
+  }
+
+  .watchBtn {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 360px) {
+  .badgeBar {
+    right: 10px;
+    left: 10px;
+  }
+
+  .cardBody {
+    padding: 13px;
+  }
+
+  .metaRow {
+    column-gap: 7px;
+    font-size: 10px;
+  }
+
+  .metaItem {
+    font-size: 10px;
+  }
+
+  .rewardAmount {
+    font-size: 12px;
+  }
+
+  .statusIndicator {
+    font-size: 9px;
+  }
+
+  .categoryTag {
+    padding: 3px 6px;
+    font-size: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .watchBtn,
+  .watchBtn::before {
+    transition: none;
+  }
+
+  .card:hover,
+  .watchBtn:hover:not(:disabled),
+  .watchBtn:active:not(:disabled) {
+    transform: none;
+  }
 }
